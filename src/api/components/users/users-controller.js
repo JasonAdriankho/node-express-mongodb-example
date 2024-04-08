@@ -104,6 +104,15 @@ async function updateUser(request, response, next) {
     const id = request.params.id;
     const name = request.body.name;
     const email = request.body.email;
+    const checkEmail = await usersService.getCheckEmail(email);
+
+    // checkEmail
+    if (!checkEmail) {
+      throw errorResponder(
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'Email already existed'
+      );
+    }
 
     const success = await usersService.updateUser(id, name, email);
     if (!success) {
